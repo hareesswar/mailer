@@ -1,5 +1,7 @@
 #from campaign import CampaignFactory
 
+import os.path
+
 import argparse
 
 import os
@@ -12,46 +14,45 @@ def console_main():
 	parser.add_argument('-s','--subject', help='Subject of email')
 	parser.add_argument('-r','--receivers',nargs='+',help='Receivers List in qoutes separated by space')
 	parser.add_argument('-t','--template',help="template file" )
-	parser.add_argument('-g','--globalVar',help="global variable file")
-	parser.add_argument('-sm','--smartSend',help="path for smart send" ,default="NULL")
+	parser.add_argument('-g','--global_var',help="global variable file")
+	parser.add_argument('-sm','--smart_send',help="path for smart send" ,default="NULL")
 
 	args = vars(parser.parse_args())
 
-	smartSend=args['smartSend']
+	smart_send=args['smart_send']
 
-	def smartSendFun():
+	def smart_send_fun():
 
-		subject=smartSend+"\subject.txt"
-		receiversList=smartSend+"\mailinglist.ml"
-		template=smartSend+"\\template.mmtmpl"
-		globalVar=smartSend+"\globals.mvar"
-		return [subject,receiversList,template,globalVar]
+		subject=os.path.join(smart_send,"subject.txt")
+		receivers_list=os.path.join(smart_send,"mailinglist.ml")
+		template=os.path.join(smart_send,"template.mmtmpl")
+		global_var=os.path.join(smart_send,"globals.mvar")
+		return [subject,receivers_list,template,global_var]
 
-	def noobSend():
+	def noob_send():
 		if args['subject']:
 			subject=args['subject']
 		else:
-			subject=current+"\subject.txt"
+			subject=os.path.join(current,"subject.txt")
 		if args['receivers']:
-			receiversList=args['receivers']
+			receivers_list=args['receivers']
 		else:
-			receiversList=current+"\mailinglist.ml"
+			receivers_list=os.path.join(current,"mailinglist.ml")
 		if args['template']:
 			template=args['template']
 		else:
-			template=current+"\\template.mmtmpl"	
-		if args['globalVar']:
-			globalVar=args['globalVar']
+			template=os.path.join(current,"template.mmtmpl")	
+		if args['global_var']:
+			global_var=args['global_var']
 		else:
-			globalVar=current+"\globals.mvar"
-		return [subject,receiversList,template,globalVar]
+			global_var=os.path.join(current,"globals.mvar")
+		return [subject,receivers_list,template,global_var]
 	
 
-	if smartSend=="NULL":
-		print noobSend() 
-		#camobj=CampaignFactory( *noobSend() )
+	if smart_send=="NULL":
+		print noob_send() 
+		#camobj=CampaignFactory( *noob_send() )
 	else:
-		print smartSendFun() 
-		#camobj = CampaignFactory( *smartSendFun() )
-
+		print smart_send_fun() 
+		#camobj = CampaignFactory( *smart_send_fun() )
 	#camobj.send()	
